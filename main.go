@@ -1,19 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/mjmhtjain/go-dynamo/src/router"
 )
 
-func main() {
-	// handler := http.HandlerFunc(pingFunc)
-	r := router.Router()
-	log.Fatal(http.ListenAndServe(":80", r))
-}
+const (
+	DEFAULT_PORT string = ":80"
+)
 
-func pingFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "pong")
+func main() {
+	r := router.Router()
+	log.Fatal(http.ListenAndServe(DEFAULT_PORT, r))
 }
