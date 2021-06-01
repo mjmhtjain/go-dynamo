@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("hello world")
+	handler := http.HandlerFunc(pingFunc)
+	log.Fatal(http.ListenAndServe(":80", handler))
+}
+
+func pingFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "pong")
 }
