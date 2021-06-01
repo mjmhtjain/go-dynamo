@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	DEFAULT_PORT string = ":80"
+	DEFAULT_ADDR string = ":80"
 )
 
 func main() {
 	r := router.Router()
-	log.Fatal(http.ListenAndServe(DEFAULT_PORT, r))
+	log.Fatal(http.ListenAndServe(DEFAULT_ADDR, r))
 }
