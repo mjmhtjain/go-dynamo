@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -63,9 +65,17 @@ func (u *UserDetailRepoImpl) Save(*model.UserDetail) {
 }
 
 func createDynamoSession() *dynamodb.DynamoDB {
+	var (
+		AccessKeyID        = os.Getenv("aws.access-key")
+		SecretAccessKey    = os.Getenv("aws.secret-key")
+		AWSRegion          = os.Getenv("aws.dynamodb.region")
+		AWSGatewayEndpoint = os.Getenv("aws.dynamodb.endpoint")
+	)
+
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region:   aws.String("us-east-1"),
-		Endpoint: aws.String("http://127.0.0.1:8000"),
+		Region:      aws.String(AWSRegion),
+		Endpoint:    aws.String(AWSGatewayEndpoint),
+		Credentials: credentials.NewStaticCredentials(AccessKeyID, SecretAccessKey, ""),
 	}))
 
 	return dynamodb.New(sess)
