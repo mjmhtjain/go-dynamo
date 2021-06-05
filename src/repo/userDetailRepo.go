@@ -23,7 +23,7 @@ var (
 
 type UserDetailRepo interface {
 	FindById(id string) (*model.UserDetail, error)
-	Save(*model.UserDetail)
+	Save(*model.UserDetail) error
 }
 
 type UserDetailRepoImpl struct {
@@ -68,8 +68,25 @@ func (u *UserDetailRepoImpl) FindById(id string) (*model.UserDetail, error) {
 	return &userDetail, nil
 }
 
-func (u *UserDetailRepoImpl) Save(*model.UserDetail) {
+func (u *UserDetailRepoImpl) Save(user *model.UserDetail) error {
+	tableName := "UserDetail"
+	userMarshaled, err := dynamodbattribute.MarshalMap(user)
+	if err != nil {
+		fmt.Printf("marshal error: %v \n", err)
+		return err
+	}
 
+	_, err = u.svc.PutItem(&dynamodb.PutItemInput{
+		TableName: aws.String(tableName),
+		Item:      userMarshaled,
+	})
+
+	if err != nil {
+		fmt.Printf("PutItem response ERROR: %v \n", err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func initDynamoSession() *dynamodb.DynamoDB {
