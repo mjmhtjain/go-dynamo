@@ -14,6 +14,13 @@ import (
 	"github.com/mjmhtjain/go-dynamo/src/model"
 )
 
+var (
+	accessKeyID        string = ""
+	secretAccessKey    string = ""
+	awsRegion          string = ""
+	awsGatewayEndpoint string = ""
+)
+
 type UserDetailRepo interface {
 	FindById(id string) (*model.UserDetail, error)
 	Save(*model.UserDetail)
@@ -25,7 +32,7 @@ type UserDetailRepoImpl struct {
 
 func NewUserDetailRepo() UserDetailRepo {
 	return &UserDetailRepoImpl{
-		svc: createDynamoSession(),
+		svc: initDynamoSession(),
 	}
 }
 
@@ -64,18 +71,17 @@ func (u *UserDetailRepoImpl) Save(*model.UserDetail) {
 
 }
 
-func createDynamoSession() *dynamodb.DynamoDB {
-	var (
-		AccessKeyID        = os.Getenv("aws.access-key")
-		SecretAccessKey    = os.Getenv("aws.secret-key")
-		AWSRegion          = os.Getenv("aws.dynamodb.region")
-		AWSGatewayEndpoint = os.Getenv("aws.dynamodb.endpoint")
-	)
+func initDynamoSession() *dynamodb.DynamoDB {
+
+	accessKeyID = os.Getenv("aws.access-key")
+	secretAccessKey = os.Getenv("aws.secret-key")
+	awsRegion = os.Getenv("aws.dynamodb.region")
+	awsGatewayEndpoint = os.Getenv("aws.dynamodb.endpoint")
 
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String(AWSRegion),
-		Endpoint:    aws.String(AWSGatewayEndpoint),
-		Credentials: credentials.NewStaticCredentials(AccessKeyID, SecretAccessKey, ""),
+		Region:      aws.String(awsRegion),
+		Endpoint:    aws.String(awsGatewayEndpoint),
+		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, ""),
 	}))
 
 	return dynamodb.New(sess)
