@@ -10,6 +10,7 @@ func Router() *http.ServeMux {
 	router := http.NewServeMux()
 
 	router.Handle("/health", http.HandlerFunc(handler.HealthHandler))
+	router.Handle("/user", http.HandlerFunc(handler.UserHandler))
 	router.Handle("/user/", http.HandlerFunc(handler.UserHandler))
 
 	return router
