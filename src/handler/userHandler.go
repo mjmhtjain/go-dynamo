@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/mjmhtjain/go-dynamo/src/customError"
 	"github.com/mjmhtjain/go-dynamo/src/repo"
 )
 
@@ -22,7 +24,16 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := userDetailRepo.FindById(userId)
 
 	if err != nil {
-		log.Fatal("something went wrong")
+		var recNotFound *customError.RecordNotFoundError
+		log.Printf("UserDetail returned an err: %v", err)
+
+		if errors.As(err, &recNotFound) {
+			w.WriteHeader(http.StatusNoContent)
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

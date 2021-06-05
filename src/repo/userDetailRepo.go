@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/mjmhtjain/go-dynamo/src/customError"
 	"github.com/mjmhtjain/go-dynamo/src/model"
 )
 
@@ -49,12 +49,13 @@ func (u *UserDetailRepoImpl) FindById(id string) (*model.UserDetail, error) {
 	})
 
 	if err != nil {
-		log.Fatalf("Got error calling GetItem: %s", err)
+		log.Printf("Got error during GetItem: %v", err)
+		return nil, err
 	}
 
 	if result.Item == nil {
 		msg := "Could not find the record"
-		return nil, errors.New(msg)
+		return nil, customError.NewRecordNotFoundError(msg, nil)
 	}
 
 	userDetail := model.UserDetail{}
