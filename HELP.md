@@ -67,3 +67,7 @@ docClient.get(params, function(err, data) {
 ```go
 docker run -dp 8000:8000 amazon/dynamodb-local -jar DynamoDBLocal.jar -inMemory -sharedDb
 ```
+
+```go
+docker run -dp 80:80 --env-file ./.env go-dynamo
+```
