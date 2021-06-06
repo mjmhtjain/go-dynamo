@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -53,7 +52,7 @@ func findUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, resp)
+	json.NewEncoder(w).Encode(resp)
 }
 
 func saveUser(w http.ResponseWriter, r *http.Request) {
