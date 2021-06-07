@@ -16,7 +16,9 @@ The action taken on the representation will be contextual to the media type bein
 
 ### GET: /user/[id]
 
-`curl --location --request GET 'http://localhost:8080/user/123'`
+```bash
+curl --location --request GET 'http://localhost:8080/user/123'
+```
 
 Response body:
 
@@ -28,13 +30,15 @@ Response body:
 
 ### POST: /user
 
-`curl --location --request POST 'http://goDynamoLB-459636926.us-west-1.elb.amazonaws.com/user' \
+```bash
+curl --location --request POST 'http://goDynamoLB-459636926.us-west-1.elb.amazonaws.com/user' \
 --header 'Content-Type: application/json' \
 --data-raw '{   
     "id": "124",
     "name": "as",
     "email": "as"
-}'`
+}'
+```
 
 Request body:
 
