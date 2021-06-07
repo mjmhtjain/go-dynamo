@@ -17,3 +17,4 @@
 # ignore env variable files
 *.env
 __debug_bin
+database/package-lock.json
