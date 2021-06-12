@@ -47,3 +47,8 @@ Request body:
         "name": "MyName",
         "email": "myname@email.com"
     }
+
+
+## Architecture Overview
+
+## Deployment Strategies
