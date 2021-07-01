@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: godynamo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: godynamo
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: godynamo
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+        - name: godynamo
+          image: goDynamoRegistry.azurecr.io/go-dynamo:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: godynamo
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: godynamo
+
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: godynamo-hpa
+spec:
+  minReplicas: 1  # define min replica count
+  maxReplicas: 1 # define max replica count
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: godynamo
+  targetCPUUtilizationPercentage: 75 # target CPU utilization

@@ -19,6 +19,7 @@ var (
 	secretAccessKey    string = ""
 	awsRegion          string = ""
 	awsGatewayEndpoint string = ""
+	tableName                 = "UserDetail"
 )
 
 type UserDetailRepo interface {
@@ -37,7 +38,6 @@ func NewUserDetailRepo() UserDetailRepo {
 }
 
 func (u *UserDetailRepoImpl) FindById(id string) (*model.UserDetail, error) {
-	tableName := "UserDetail"
 
 	result, err := u.svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(tableName),
@@ -69,7 +69,6 @@ func (u *UserDetailRepoImpl) FindById(id string) (*model.UserDetail, error) {
 }
 
 func (u *UserDetailRepoImpl) Save(user *model.UserDetail) error {
-	tableName := "UserDetail"
 	userMarshaled, err := dynamodbattribute.MarshalMap(user)
 	if err != nil {
 		fmt.Printf("marshal error: %v \n", err)
